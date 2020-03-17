@@ -1,5 +1,4 @@
 const path = require('path')
-const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -10,11 +9,8 @@ const PATHS = {
     dist: path.join(__dirname, './dist'),
     assets: 'assets/'
 }
-let isProduction = 'production';
 
 module.exports = {
-    // mode: isProduction || 'development',
-
     externals: {
         paths: PATHS
     },
