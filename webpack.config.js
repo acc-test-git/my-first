@@ -10,20 +10,24 @@ const PATHS = {
     dist: path.join(__dirname, './dist'),
     assets: 'assets/'
 }
+let isProduction = 'production';
 
 module.exports = {
+    // mode: isProduction || 'development',
 
     externals: {
         paths: PATHS
     },
+    entry: [
+        `${PATHS.src}/${PATHS.assets}js/index.js`,
+        `${PATHS.src}/${PATHS.assets}scss/main.scss`
+    ],
 
-    entry: `${PATHS.src}/${PATHS.assets}js/index.js`,
     output: {
         filename: `[name].js`,
-        path: PATHS.dist,
+        path: path.resolve(__dirname, './dist/'),
         publicPath: '/'
     },
-    devtool: 'cheap-eval-source-map',
     devServer: {
         contentBase: PATHS.dist,
         overlay: true,
@@ -33,7 +37,7 @@ module.exports = {
     },
     plugins: [
         new MiniCssExtractPlugin({
-            filename: `[name].css`,
+            filename: `[name].css`
         }),
         new CopyWebpackPlugin([
             { from: `${PATHS.src}/${PATHS.assets}img`, to: `${PATHS.assets}img` },
@@ -50,6 +54,26 @@ module.exports = {
 
     module: {
         rules: [
+            // {
+            //     test: /.s?css$/,
+            //     use: [
+            //       isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
+            //       'css-loader',
+            //     //   {
+            //     //     loader: 'resolve-url-loader',
+            //     //     options: {
+            //     //       root: path.join(__dirname, 'src')
+            //     //     }
+            //     //   },
+            //       {
+            //         loader: 'sass-loader',
+            //         options: {
+            //           sourceMap: true,
+            //           sourceMapContents: false
+            //         }
+            //       }
+            //     ]
+            // },
             {
                 test: /\.css$/,
                 use: [
@@ -58,10 +82,11 @@ module.exports = {
                     {
                         loader: 'css-loader',
                         options: { sourceMap: true }
-                    }, {
+                    }, 
+            {
                         loader: 'postcss-loader',
                         options: { sourceMap: true, config: { path: `./postcss.config.js` } }
-                    }
+                    },
                 ]
             },
             {
@@ -72,7 +97,8 @@ module.exports = {
                     {
                         loader: 'css-loader',
                         options: {
-                            sourceMap: true
+                            sourceMap: true,
+                            url: false
                         }
                     },
                     {
@@ -84,6 +110,7 @@ module.exports = {
                             }
                         }
                     },
+
                     {
                         loader: 'sass-loader',
                         options: {
@@ -96,11 +123,12 @@ module.exports = {
                 test: /\.(png|jpg|gif|svg)$/,
                 loader: 'file-loader',
                 options: {
-                    name: '[name].[ext]'
+                    name: '[name].[ext]',
+                    fallback: "file-loader"
                 }
             },
             {
-                test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+                test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
                 loader: 'url-loader',
                 options: {
                     name: '[name].[ext]'
